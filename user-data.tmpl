@@ -75,3 +75,5 @@ autoinstall:
       # - |
       #   echo "${USERNAME} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/01-${USERNAME}-sudo
       # Fin comandos del primer reinicio
+      # Disable cloud-init
+      - touch /etc/cloud/cloud-init.disabled
