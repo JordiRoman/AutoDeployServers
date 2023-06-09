@@ -1,0 +1,77 @@
+#cloud-config
+    
+autoinstall:
+  version: 1
+  locale: es_ES.UTF-8
+  keyboard:
+    layout: es
+  timezone: Europe/Madrid
+
+  # configuracion inicial de ssh
+  ssh:
+    install-server: yes
+    authorized-keys: 
+      - ${SSH_PUB_KEY}
+    allow-pw: yes
+
+  identity:
+    hostname: sbd-host
+    password: "${CRYPT_PASSWORD}"
+    username: ${USERNAME}
+
+  # Queremos que actualize none | security | all
+  #updates: security
+
+  #interactive-sections:
+  #  - storage
+  #  - network
+
+  drivers:
+    install: true
+
+  packages:
+    - ufw
+    - logrotate
+
+  # "los [late-commands] Se ejecutan en el instalador con el sistema montado en /target"
+  late-commands:
+    # Randomizamos el hostname
+    - echo sbd-host-$(openssl rand -hex 3) > /target/etc/hostname
+    # Mostrar ip en el issue (man agetty)
+    - |
+      mkdir -p /target/etc/issue.d/
+      cat <<EOF >/target/etc/issue.d/00.issue
+      FQDN : \n.\O
+      IPv4 : \4 
+      IPv6 : \6
+
+
+      EOF
+    # sudoers.d
+    - |
+      cat <<EOF >/target/etc/sudoers.d/01-sid-sudo
+      sid ALL=(ALL) NOPASSWD: ALL
+      EOF
+    # config ufw allow ssh
+    - curtin in-target --target=/target -- ufw allow ssh
+    - curtin in-target --target=/target -- ufw enable
+
+  # Apagamos la maquina del instalador
+  shutdown: poweroff
+
+  # Configuraciones finales de usuario
+  user-data:
+    # Tras el primer inicio apagamos la 
+    power_state:
+      mode: poweroff
+
+    # Comandos se ejecutan durante el primer arranque. NO INTERACTIVO
+    runcmd:
+      # Mostrar ip en el issue
+      # - |
+      #   echo "\n$(hostname) - $(hostname -I)\n" >> /etc/issue
+      #   echo "\n$(hostname) - $(hostname -I)\n" >> /etc/issue.net
+      # # sudoers.d
+      # - |
+      #   echo "${USERNAME} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/01-${USERNAME}-sudo
+      # Fin comandos del primer reinicio
