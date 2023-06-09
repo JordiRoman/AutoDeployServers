@@ -16,5 +16,5 @@ SSH_PUB_KEY=$(cat ${WORK_DIR}/key-${HOST_NAME}.pub )
 mkdir -p ${WORK_DIR}/www
 touch ${WORK_DIR}/www/meta-data
 touch ${WORK_DIR}/www/vendor-data
-export USERNAME PASSWORD CRYPT_PASSWORD SSH_PUB_KEY
+export HOST_NAME USERNAME PASSWORD CRYPT_PASSWORD SSH_PUB_KEY
 cat user-data.tmpl | envsubst  > ${WORK_DIR}/www/user-data
