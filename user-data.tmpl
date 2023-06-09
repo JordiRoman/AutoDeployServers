@@ -36,7 +36,7 @@ autoinstall:
   # "los [late-commands] Se ejecutan en el instalador con el sistema montado en /target"
   late-commands:
     # Randomizamos el hostname
-    - echo sbd-host-$(openssl rand -hex 3) > /target/etc/hostname
+    - echo ${HOST_NAME}-$(openssl rand -hex 3) > /target/etc/hostname
     # Mostrar ip en el issue (man agetty)
     - |
       mkdir -p /target/etc/issue.d/
