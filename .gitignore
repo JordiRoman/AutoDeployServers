@@ -1,2 +1,6 @@
+# Los ficheros de environment
 .env
+# El directorio tmp
 tmp
+# los directorios diversos
+**/

@@ -12,8 +12,8 @@ if [ ! -f ${WORK_DIR}/${ISO_FILE} ] ; then
 fi 
 
 # Creamos el disco
-[ -e ${WORK_DIR}/${HOSTNAME}.qcow2 ] && mv ${WORK_DIR}/${HOSTNAME}.qcow2 ${WORK_DIR}/${HOSTNAME}.qcow2.bak
-qemu-img create -f qcow2 ${WORK_DIR}/${HOSTNAME}.qcow2 ${DISK_SIZE}
+[ -e ${WORK_DIR}/${HOST_NAME}.qcow2 ] && mv ${WORK_DIR}/${HOST_NAME}.qcow2 ${WORK_DIR}/${HOSTNAME}.qcow2.bak
+qemu-img create -f qcow2 ${WORK_DIR}/${HOST_NAME}.qcow2 ${DISK_SIZE}
 
 # Extraemos kernel & initrd Casper
 [ -e ${WORK_DIR}/mnt ] && rm -rf ${WORK_DIR}/mnt
@@ -24,7 +24,7 @@ ls ${WORK_DIR}/mnt
 
 # Lanzamos la autoinstall
 time kvm -no-reboot -m 3072 \
-	-drive file=${WORK_DIR}/${HOSTNAME}.qcow2,format=qcow2,cache=none,if=virtio \
+	-drive file=${WORK_DIR}/${HOST_NAME}.qcow2,format=qcow2,cache=none,if=virtio \
 	-cdrom ${WORK_DIR}/${ISO_FILE}					\
 	-kernel ${WORK_DIR}/mnt/casper/vmlinuz				\
     -initrd ${WORK_DIR}/mnt/casper/initrd				\
